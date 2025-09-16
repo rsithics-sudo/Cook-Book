@@ -1,0 +1,833 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicious Recipes Cookbook</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f6f1;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #8b4513;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #ffd700;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%238b4513"/><path d="M0 0L100 100" stroke="%23644a34" stroke-width="2"/><path d="M100 0L0 100" stroke="%23644a34" stroke-width="2"/></svg>');
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Recipe Grid */
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .recipe-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .recipe-image {
+            height: 200px;
+            background-color: #8b4513;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .recipe-content {
+            padding: 20px;
+        }
+        
+        .recipe-content h3 {
+            margin-bottom: 10px;
+            color: #8b4513;
+        }
+        
+        .recipe-content p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .recipe-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        /* Recipe Detail */
+        .recipe-detail {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .recipe-detail.active {
+            display: block;
+        }
+        
+        .recipe-header {
+            margin-bottom: 30px;
+        }
+        
+        .recipe-header h2 {
+            color: #8b4513;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .recipe-header .meta {
+            display: flex;
+            gap: 20px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        
+        .recipe-image-large {
+            height: 300px;
+            background-color: #8b4513;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        
+        .ingredients, .instructions {
+            margin-bottom: 30px;
+        }
+        
+        .ingredients h3, .instructions h3 {
+            color: #8b4513;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .ingredients ul {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+        
+        .ingredients li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .ingredients li:before {
+            content: "•";
+            color: #8b4513;
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 15px;
+        }
+        
+        .back-button {
+            background-color: #8b4513;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            margin-bottom: 30px;
+        }
+        
+        .back-button:hover {
+            background-color: #6b3409;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .recipes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Delicious Recipes</div>
+            <nav>
+                <ul>
+                    <li><a href="#breakfast">Breakfast</a></li>
+                    <li><a href="#lunch">Lunch</a></li>
+                    <li><a href="#dinner">Dinner</a></li>
+                    <li><a href="#dessert">Dessert</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Discover 15 Amazing Recipes</h1>
+            <p>From breakfast to dessert, find the perfect recipe for any occasion with our detailed cooking instructions.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <button class="back-button" onclick="showRecipeList()">← Back to All Recipes</button>
+        
+        <div class="recipe-detail" id="recipe-detail">
+            <!-- Recipe detail will be inserted here by JavaScript -->
+        </div>
+
+        <div class="recipes-grid" id="recipes-grid">
+            <!-- Recipe cards will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Delicious Recipes Cookbook. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Recipe data
+        const recipes = [
+            {
+                id: 1,
+                title: "Classic Pancakes",
+                category: "breakfast",
+                prepTime: "10 mins",
+                cookTime: "15 mins",
+                servings: 4,
+                ingredients: [
+                    "1 cup all-purpose flour",
+                    "2 tablespoons sugar",
+                    "2 teaspoons baking powder",
+                    "1/2 teaspoon salt",
+                    "1 cup milk",
+                    "1 large egg",
+                    "2 tablespoons melted butter",
+                    "Butter or oil for cooking"
+                ],
+                instructions: [
+                    "In a large bowl, whisk together flour, sugar, baking powder, and salt.",
+                    "In another bowl, beat the egg, then add milk and melted butter.",
+                    "Pour the wet ingredients into the dry ingredients and stir until just combined. Don't overmix - a few lumps are fine.",
+                    "Heat a non-stick skillet or griddle over medium heat and lightly grease with butter or oil.",
+                    "Pour 1/4 cup of batter onto the skillet for each pancake.",
+                    "Cook until bubbles form on the surface, then flip and cook until golden brown on the other side.",
+                    "Serve warm with maple syrup and butter."
+                ]
+            },
+            {
+                id: 2,
+                title: "Vegetable Omelette",
+                category: "breakfast",
+                prepTime: "15 mins",
+                cookTime: "10 mins",
+                servings: 2,
+                ingredients: [
+                    "4 large eggs",
+                    "2 tablespoons milk",
+                    "1/4 cup diced bell peppers",
+                    "1/4 cup diced onions",
+                    "1/4 cup chopped mushrooms",
+                    "1/4 cup shredded cheese",
+                    "2 tablespoons butter",
+                    "Salt and pepper to taste"
+                ],
+                instructions: [
+                    "In a bowl, whisk eggs, milk, salt, and pepper until well combined.",
+                    "Melt butter in a non-stick skillet over medium heat.",
+                    "Add vegetables and sauté until tender, about 3-4 minutes.",
+                    "Pour the egg mixture over the vegetables.",
+                    "Cook without stirring until the edges begin to set.",
+                    "Gently lift the edges with a spatula to allow uncooked eggs to flow underneath.",
+                    "When the top is nearly set, sprinkle cheese over one half of the omelette.",
+                    "Fold the other half over the cheese and cook for another minute.",
+                    "Slide onto a plate and serve immediately."
+                ]
+            },
+            {
+                id: 3,
+                title: "French Toast",
+                category: "breakfast",
+                prepTime: "10 mins",
+                cookTime: "15 mins",
+                servings: 4,
+                ingredients: [
+                    "8 slices bread (preferably day-old)",
+                    "4 large eggs",
+                    "1 cup milk",
+                    "2 tablespoons sugar",
+                    "1 teaspoon vanilla extract",
+                    "1/2 teaspoon ground cinnamon",
+                    "Pinch of salt",
+                    "Butter for cooking",
+                    "Maple syrup for serving"
+                ],
+                instructions: [
+                    "In a shallow bowl, whisk together eggs, milk, sugar, vanilla, cinnamon, and salt.",
+                    "Dip each slice of bread into the mixture, allowing it to soak for a few seconds on each side.",
+                    "Melt butter in a large skillet over medium heat.",
+                    "Cook the soaked bread until golden brown, about 2-3 minutes per side.",
+                    "Serve warm with maple syrup and fresh berries if desired."
+                ]
+            },
+            {
+                id: 4,
+                title: "Avocado Toast",
+                category: "breakfast",
+                prepTime: "5 mins",
+                cookTime: "5 mins",
+                servings: 2,
+                ingredients: [
+                    "2 slices whole grain bread",
+                    "1 ripe avocado",
+                    "1 tablespoon lemon juice",
+                    "Salt and pepper to taste",
+                    "Red pepper flakes (optional)",
+                    "2 poached or fried eggs (optional)",
+                    "Microgreens or sprouts for garnish"
+                ],
+                instructions: [
+                    "Toast the bread until golden and crisp.",
+                    "Cut the avocado in half, remove the pit, and scoop the flesh into a bowl.",
+                    "Mash the avocado with lemon juice, salt, and pepper to desired consistency.",
+                    "Spread the mashed avocado evenly on the toast.",
+                    "Sprinkle with red pepper flakes if using.",
+                    "Top with a poached or fried egg if desired.",
+                    "Garnish with microgreens and serve immediately."
+                ]
+            },
+            {
+                id: 5,
+                title: "Greek Yogurt Parfait",
+                category: "breakfast",
+                prepTime: "5 mins",
+                cookTime: "0 mins",
+                servings: 2,
+                ingredients: [
+                    "2 cups Greek yogurt",
+                    "1 cup granola",
+                    "1 cup mixed berries (strawberries, blueberries, raspberries)",
+                    "2 tablespoons honey",
+                    "1/4 cup chopped nuts (almonds, walnuts)"
+                ],
+                instructions: [
+                    "In two glasses or bowls, start with a layer of Greek yogurt.",
+                    "Add a layer of mixed berries.",
+                    "Sprinkle a layer of granola.",
+                    "Repeat the layers until the glass is filled.",
+                    "Drizzle with honey and top with chopped nuts.",
+                    "Serve immediately or refrigerate until ready to serve."
+                ]
+            },
+            {
+                id: 6,
+                title: "Chicken Caesar Salad",
+                category: "lunch",
+                prepTime: "20 mins",
+                cookTime: "15 mins",
+                servings: 4,
+                ingredients: [
+                    "2 boneless, skinless chicken breasts",
+                    "1 large head romaine lettuce, chopped",
+                    "1/2 cup Caesar dressing",
+                    "1/4 cup grated Parmesan cheese",
+                    "1 cup croutons",
+                    "Salt and pepper to taste",
+                    "Olive oil for cooking"
+                ],
+                instructions: [
+                    "Season chicken breasts with salt and pepper.",
+                    "Heat olive oil in a skillet over medium-high heat.",
+                    "Cook chicken for 6-7 minutes per side, until cooked through.",
+                    "Let chicken rest for 5 minutes, then slice into strips.",
+                    "In a large bowl, combine romaine lettuce, croutons, and Parmesan cheese.",
+                    "Add Caesar dressing and toss to coat.",
+                    "Top with sliced chicken and additional Parmesan if desired.",
+                    "Serve immediately."
+                ]
+            },
+            {
+                id: 7,
+                title: "Margherita Pizza",
+                category: "lunch",
+                prepTime: "20 mins",
+                cookTime: "15 mins",
+                servings: 4,
+                ingredients: [
+                    "1 pizza dough (store-bought or homemade)",
+                    "1/2 cup pizza sauce",
+                    "8 oz fresh mozzarella, sliced",
+                    "1/4 cup fresh basil leaves",
+                    "2 tablespoons olive oil",
+                    "2 cloves garlic, minced",
+                    "Salt and pepper to taste"
+                ],
+                instructions: [
+                    "Preheat oven to 475°F (245°C).",
+                    "Roll out pizza dough on a floured surface to desired thickness.",
+                    "Transfer dough to a pizza stone or baking sheet.",
+                    "Brush with olive oil and minced garlic.",
+                    "Spread pizza sauce evenly over the dough, leaving a border for the crust.",
+                    "Arrange mozzarella slices on top of the sauce.",
+                    "Bake for 12-15 minutes, until crust is golden and cheese is bubbly.",
+                    "Remove from oven and top with fresh basil leaves.",
+                    "Let cool for a few minutes before slicing and serving."
+                ]
+            },
+            {
+                id: 8,
+                title: "Vegetable Stir Fry",
+                category: "lunch",
+                prepTime: "15 mins",
+                cookTime: "10 mins",
+                servings: 4,
+                ingredients: [
+                    "2 cups mixed vegetables (broccoli, bell peppers, carrots, snap peas)",
+                    "2 cloves garlic, minced",
+                    "1 tablespoon fresh ginger, grated",
+                    "2 tablespoons vegetable oil",
+                    "1/4 cup soy sauce",
+                    "1 tablespoon honey",
+                    "1 teaspoon sesame oil",
+                    "Sesame seeds for garnish",
+                    "Cooked rice for serving"
+                ],
+                instructions: [
+                    "Heat vegetable oil in a wok or large skillet over high heat.",
+                    "Add garlic and ginger, stir for 30 seconds until fragrant.",
+                    "Add vegetables and stir fry for 3-4 minutes until crisp-tender.",
+                    "In a small bowl, mix soy sauce, honey, and sesame oil.",
+                    "Pour sauce over vegetables and toss to coat.",
+                    "Cook for another 2 minutes until sauce thickens slightly.",
+                    "Garnish with sesame seeds and serve over rice."
+                ]
+            },
+            {
+                id: 9,
+                title: "Classic Burger",
+                category: "lunch",
+                prepTime: "15 mins",
+                cookTime: "10 mins",
+                servings: 4,
+                ingredients: [
+                    "1 lb ground beef (80/20 blend)",
+                    "4 burger buns",
+                    "4 slices cheese (cheddar, American, or your choice)",
+                    "Lettuce leaves",
+                    "Sliced tomatoes",
+                    "Sliced onions",
+                    "Ketchup, mustard, mayonnaise",
+                    "Salt and pepper to taste"
+                ],
+                instructions: [
+                    "Divide ground beef into 4 equal portions and shape into patties.",
+                    "Make a slight indentation in the center of each patty to prevent bulging during cooking.",
+                    "Season both sides generously with salt and pepper.",
+                    "Heat grill or skillet over medium-high heat.",
+                    "Cook patties for about 4-5 minutes per side for medium doneness.",
+                    "During the last minute of cooking, add cheese slices to melt.",
+                    "Toast the burger buns lightly.",
+                    "Assemble burgers with your desired toppings and condiments.",
+                    "Serve immediately with fries or side salad."
+                ]
+            },
+            {
+                id: 10,
+                title: "Creamy Tomato Soup",
+                category: "lunch",
+                prepTime: "10 mins",
+                cookTime: "25 mins",
+                servings: 4,
+                ingredients: [
+                    "2 tablespoons olive oil",
+                    "1 onion, chopped",
+                    "2 cloves garlic, minced",
+                    "2 cans (28 oz each) whole tomatoes",
+                    "2 cups vegetable broth",
+                    "1/2 cup heavy cream",
+                    "1 teaspoon sugar",
+                    "1/4 cup fresh basil, chopped",
+                    "Salt and pepper to taste"
+                ],
+                instructions: [
+                    "Heat olive oil in a large pot over medium heat.",
+                    "Add onion and cook until softened, about 5 minutes.",
+                    "Add garlic and cook for another minute.",
+                    "Add tomatoes with their juices and vegetable broth.",
+                    "Bring to a simmer and cook for 15 minutes.",
+                    "Use an immersion blender to puree the soup until smooth.",
+                    "Stir in heavy cream, sugar, and basil.",
+                    "Season with salt and pepper to taste.",
+                    "Simmer for another 5 minutes without boiling.",
+                    "Serve hot with grilled cheese sandwiches."
+                ]
+            },
+            {
+                id: 11,
+                title: "Spaghetti Bolognese",
+                category: "dinner",
+                prepTime: "20 mins",
+                cookTime: "1 hour",
+                servings: 6,
+                ingredients: [
+                    "1 lb spaghetti",
+                    "1 lb ground beef",
+                    "1 onion, finely chopped",
+                    "2 carrots, finely diced",
+                    "2 celery stalks, finely diced",
+                    "3 cloves garlic, minced",
+                    "1 can (28 oz) crushed tomatoes",
+                    "1/2 cup red wine",
+                    "1/2 cup milk",
+                    "2 tablespoons tomato paste",
+                    "1 teaspoon dried oregano",
+                    "1 bay leaf",
+                    "Salt and pepper to taste",
+                    "Parmesan cheese for serving"
+                ],
+                instructions: [
+                    "Heat olive oil in a large pot over medium heat.",
+                    "Add onion, carrots, and celery, cook until softened.",
+                    "Add garlic and cook for another minute.",
+                    "Add ground beef and cook until browned, breaking it up with a spoon.",
+                    "Add tomato paste and cook for 1 minute.",
+                    "Pour in red wine and cook until mostly evaporated.",
+                    "Add crushed tomatoes, milk, oregano, bay leaf, salt, and pepper.",
+                    "Simmer on low heat for at least 45 minutes, stirring occasionally.",
+                    "Cook spaghetti according to package directions until al dente.",
+                    "Remove bay leaf from sauce and adjust seasoning.",
+                    "Serve sauce over drained spaghetti with grated Parmesan cheese."
+                ]
+            },
+            {
+                id: 12,
+                title: "Grilled Salmon",
+                category: "dinner",
+                prepTime: "10 mins",
+                cookTime: "15 mins",
+                servings: 4,
+                ingredients: [
+                    "4 salmon fillets (6 oz each)",
+                    "2 tablespoons olive oil",
+                    "2 tablespoons lemon juice",
+                    "2 cloves garlic, minced",
+                    "1 teaspoon dried dill",
+                    "Salt and pepper to taste",
+                    "Lemon wedges for serving"
+                ],
+                instructions: [
+                    "Preheat grill to medium-high heat.",
+                    "In a small bowl, mix olive oil, lemon juice, garlic, dill, salt, and pepper.",
+                    "Brush the mixture over both sides of the salmon fillets.",
+                    "Oil the grill grates to prevent sticking.",
+                    "Place salmon skin-side down on the grill.",
+                    "Cook for 5-6 minutes, then carefully flip.",
+                    "Cook for another 4-5 minutes until fish flakes easily with a fork.",
+                    "Remove from grill and let rest for 2 minutes.",
+                    "Serve with lemon wedges and your choice of sides."
+                ]
+            },
+            {
+                id: 13,
+                title: "Chicken Curry",
+                category: "dinner",
+                prepTime: "20 mins",
+                cookTime: "40 mins",
+                servings: 6,
+                ingredients: [
+                    "2 lbs chicken thighs, cut into chunks",
+                    "1 onion, finely chopped",
+                    "3 cloves garlic, minced",
+                    "1 tablespoon fresh ginger, grated",
+                    "2 tablespoons curry powder",
+                    "1 can (14 oz) coconut milk",
+                    "1 cup chicken broth",
+                    "2 tablespoons tomato paste",
+                    "1 tablespoon vegetable oil",
+                    "Salt to taste",
+                    "Fresh cilantro for garnish"
+                ],
+                instructions: [
+                    "Heat oil in a large pot over medium heat.",
+                    "Add onion and cook until softened, about 5 minutes.",
+                    "Add garlic and ginger, cook for another minute.",
+                    "Add curry powder and stir for 30 seconds until fragrant.",
+                    "Add chicken pieces and cook until lightly browned.",
+                    "Stir in tomato paste, then add coconut milk and chicken broth.",
+                    "Bring to a simmer, then reduce heat and cook for 30 minutes until chicken is tender and sauce has thickened.",
+                    "Season with salt to taste.",
+                    "Garnish with fresh cilantro and serve with rice or naan bread."
+                ]
+            },
+            {
+                id: 14,
+                title: "Chocolate Chip Cookies",
+                category: "dessert",
+                prepTime: "15 mins",
+                cookTime: "10 mins",
+                servings: 24,
+                ingredients: [
+                    "2 1/4 cups all-purpose flour",
+                    "1 teaspoon baking soda",
+                    "1 teaspoon salt",
+                    "1 cup butter, softened",
+                    "3/4 cup granulated sugar",
+                    "3/4 cup brown sugar",
+                    "2 large eggs",
+                    "2 teaspoons vanilla extract",
+                    "2 cups chocolate chips",
+                    "1 cup chopped nuts (optional)"
+                ],
+                instructions: [
+                    "Preheat oven to 375°F (190°C).",
+                    "In a small bowl, whisk together flour, baking soda, and salt.",
+                    "In a large bowl, beat butter, granulated sugar, and brown sugar until creamy.",
+                    "Add eggs one at a time, beating well after each addition.",
+                    "Stir in vanilla extract.",
+                    "Gradually beat in flour mixture.",
+                    "Stir in chocolate chips and nuts if using.",
+                    "Drop by rounded tablespoon onto ungreased baking sheets.",
+                    "Bake for 9-11 minutes until golden brown.",
+                    "Cool on baking sheets for 2 minutes, then remove to wire racks to cool completely."
+                ]
+            },
+            {
+                id: 15,
+                title: "Classic Cheesecake",
+                category: "dessert",
+                prepTime: "30 mins",
+                cookTime: "1 hour",
+                servings: 12,
+                ingredients: [
+                    "2 cups graham cracker crumbs",
+                    "1/2 cup butter, melted",
+                    "1/4 cup sugar",
+                    "4 packages (8 oz each) cream cheese, softened",
+                    "1 cup sugar",
+                    "1 teaspoon vanilla extract",
+                    "4 large eggs",
+                    "1 cup sour cream"
+                ],
+                instructions: [
+                    "Preheat oven to 325°F (165°C).",
+                    "Mix graham cracker crumbs, melted butter, and 1/4 cup sugar.",
+                    "Press onto bottom and up sides of a 9-inch springform pan.",
+                    "Bake crust for 10 minutes, then cool.",
+                    "Beat cream cheese, 1 cup sugar, and vanilla until smooth.",
+                    "Add eggs one at a time, beating on low speed just until blended.",
+                    "Stir in sour cream.",
+                    "Pour filling over crust.",
+                    "Bake for 1 hour or until center is almost set.",
+                    "Turn off oven and leave cheesecake in oven with door slightly open for 1 hour.",
+                    "Remove from oven and run knife around rim of pan to loosen.",
+                    "Cool completely before refrigerating for at least 4 hours, preferably overnight."
+                ]
+            }
+        ];
+
+        // DOM elements
+        const recipesGrid = document.getElementById('recipes-grid');
+        const recipeDetail = document.getElementById('recipe-detail');
+        const backButton = document.querySelector('.back-button');
+
+        // Initially hide the back button
+        backButton.style.display = 'none';
+
+        // Function to display recipe cards
+        function displayRecipeCards() {
+            recipesGrid.innerHTML = '';
+            recipes.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.innerHTML = `
+                    <div class="recipe-image">${recipe.title}</div>
+                    <div class="recipe-content">
+                        <h3>${recipe.title}</h3>
+                        <p>A delicious ${recipe.category} recipe that takes ${recipe.prepTime} preparation and ${recipe.cookTime} cooking time.</p>
+                        <div class="recipe-meta">
+                            <span>${recipe.prepTime} prep</span>
+                            <span>${recipe.servings} servings</span>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => showRecipeDetail(recipe.id));
+                recipesGrid.appendChild(card);
+            });
+        }
+
+        // Function to show recipe detail
+        function showRecipeDetail(recipeId) {
+            const recipe = recipes.find(r => r.id === recipeId);
+            if (!recipe) return;
+            
+            recipeDetail.innerHTML = `
+                <div class="recipe-header">
+                    <h2>${recipe.title}</h2>
+                    <div class="meta">
+                        <span>Prep: ${recipe.prepTime}</span>
+                        <span>Cook: ${recipe.cookTime}</span>
+                        <span>Servings: ${recipe.servings}</span>
+                    </div>
+                </div>
+                <div class="recipe-image-large">${recipe.title}</div>
+                <div class="ingredients">
+                    <h3>Ingredients</h3>
+                    <ul>
+                        ${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="instructions">
+                    <h3>Instructions</h3>
+                    <ol>
+                        ${recipe.instructions.map(instruction => `<li>${instruction}</li>`).join('')}
+                    </ol>
+                </div>
+            `;
+            
+            recipeDetail.classList.add('active');
+            recipesGrid.style.display = 'none';
+            backButton.style.display = 'block';
+            
+            // Scroll to top of recipe detail
+            window.scrollTo({ top: recipeDetail.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        // Function to show recipe list
+        function showRecipeList() {
+            recipeDetail.classList.remove('active');
+            recipesGrid.style.display = 'grid';
+            backButton.style.display = 'none';
+        }
+
+        // Initialize the page
+        displayRecipeCards();
+    </script>
+</body>
+</html>
